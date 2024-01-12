@@ -2,3 +2,19 @@ pip install fastapi
 pip install uvicorn[standard]
 pip install sqlalchemy
 pip install databases
+
+
+DATABASE_URL = "mysql+mysqlconnector://admin:1234@localhost/fastapi"
+mysql -u admin -p
+1234
+USE fastapi;
+SHOW TABLES;
+
+INSERT INTO users (username, password, email, telephone) VALUES ('admin', '1234', 'admin@admin.com', '(11) 96935-9436');
+DROP DATABASE fastapi;
+CREATE DATABASE fastapi;
+USE fastapi;
+
+alembic init alembic
+alembic revision --autogenerate -m "Atualizando comprimento da coluna username"
+alembic upgrade head
