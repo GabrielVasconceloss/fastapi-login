@@ -3,6 +3,12 @@ pip install uvicorn[standard]
 pip install sqlalchemy
 pip install databases
 
+CREATE DATABASE fastapi;
+CREATE USER 'admin'@'localhost' IDENTIFIED BY '1234';
+GRANT ALL PRIVILEGES ON fastapi.* TO 'admin'@'localhost';
+FLUSH PRIVILEGES;
+
+
 
 DATABASE_URL = "mysql+mysqlconnector://admin:1234@localhost/fastapi"
 mysql -u admin -p
@@ -18,3 +24,9 @@ USE fastapi;
 alembic init alembic
 alembic revision --autogenerate -m "Atualizando comprimento da coluna username"
 alembic upgrade head
+
+uvicorn app.main:app --reload
+
+sqlalchemy.url = mysql+mysqlconnector://admin:1234@localhost/fastapi
+from app.db.base_class import Base
+target_metadata = Base.metadata

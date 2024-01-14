@@ -10,10 +10,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base: DeclarativeMeta = declarative_base()
 
 
-# Substitua a declaração da classe Base pela importação da classe Base do seu arquivo base_class.py
-# Base = declarative_base()
+from app.models import user, permission
 
-from app.models import user
 def create_tables():
     Base.metadata.create_all(bind=engine)
 
