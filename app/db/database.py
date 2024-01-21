@@ -10,7 +10,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base: DeclarativeMeta = declarative_base()
 
 
-from app.models import user, permission
+
+from app.models import usuario, perfil, acesso, transacao
 
 def create_tables():
     Base.metadata.create_all(bind=engine)

@@ -28,32 +28,32 @@ def login_access_token(
     """
     OAuth2 compatible token login, get an access token for future requests
     """
-    user = crud.user.authenticate(
-        db, email=form_data.username, password=form_data.password
+    user = crud.usuario.authenticate(
+        db, Email=form_data.username, password=form_data.password
     )
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
-    elif not crud.user.is_active(user):
+    elif not crud.usuario.is_active(user):
         raise HTTPException(status_code=400, detail="Inactive user")
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return {
         "access_token": security.create_access_token(
-            user.id, expires_delta=access_token_expires
+            user.Numero, expires_delta=access_token_expires
         ),
         "token_type": "bearer",
     }
-
-@router.post("/login/test-token", response_model=schemas.User)
-def test_token(current_user: models.User = Depends(deps.get_current_user)) -> Any:
-    """
-    Test access token
-    """
-    return current_user
-
-
-# @router.post("/login/")
-# def login(username: str, password: str, db: Session = Depends(deps.get_db)):
-#     user = crud.get_user(db, username)
-#     if user is None or user.password != password:
-#         raise HTTPException(status_code=401, detail="Invalid credentials")
-#     return {"message": "Login successful"}
+#
+# @router.post("/login/test-token", response_model=schemas.Usuario)
+# def test_token(current_user: models.User = Depends(deps.get_current_user)) -> Any:
+#     """
+#     Test access token
+#     """
+#     return current_user
+#
+#
+# # @router.post("/login/")
+# # def login(username: str, password: str, db: Session = Depends(deps.get_db)):
+# #     user = crud.get_user(db, username)
+# #     if user is None or user.password != password:
+# #         raise HTTPException(status_code=401, detail="Invalid credentials")
+# #     return {"message": "Login successful"}

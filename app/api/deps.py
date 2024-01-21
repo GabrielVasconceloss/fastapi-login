@@ -24,7 +24,7 @@ reusable_oauth2 = OAuth2PasswordBearer(
 
 def get_current_user(
     db: Session = Depends(get_db), token: str = Depends(reusable_oauth2)
-) -> models.User:
+) -> models.Usuario:
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
@@ -35,15 +35,15 @@ def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Could not validate credentials",
         )
-    user = crud.user.get(db, id=token_data.sub)
+    user = crud.usuario.get(db, id=token_data.sub)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
 def get_current_active_admin(
-    current_user: models.User = Depends(get_current_user),
-) -> models.User:
-    if not crud.user.is_admin(current_user):
+    current_user: models.Usuario = Depends(get_current_user),
+) -> models.Usuario:
+    if not crud.usuario.is_admin(current_user):
         raise HTTPException(
             status_code=400, detail="The user doesn't have enough privileges"
         )
@@ -52,8 +52,8 @@ def get_current_active_admin(
 
 
 def get_current_active_user(
-    current_user: models.User = Depends(get_current_user),
-) -> models.User:
-    if not crud.user.is_active(current_user):
+    current_user: models.Usuario = Depends(get_current_user),
+) -> models.Usuario:
+    if not crud.usuario.is_active(current_user):
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
