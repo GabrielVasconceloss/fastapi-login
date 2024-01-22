@@ -1,4 +1,5 @@
 from typing import Any, List
+
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from pydantic.networks import EmailStr
@@ -6,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
 from app.api import deps
-
+from app.core.config import settings
 
 
 router = APIRouter()
@@ -27,65 +28,19 @@ def read_users(
 
 
 
-@router.get("/{user_id}", response_model=schemas.Usuario)
-def read_user_by_id(
-    user_id: int,
-    current_user: models.Usuario = Depends(deps.get_current_active_user),
-    db: Session = Depends(deps.get_db),
-) -> Any:
-    """
-    Get a specific user by id.
-    """
-    user = crud.usuario.get(db, id=user_id)
-    if user == current_user:
-        return user
-    if not crud.usuario.is_admin(current_user):
-        raise HTTPException(
-            status_code=400, detail="The user doesn't have enough privileges"
-        )
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="The user with this username does not exist in the system",
-        )
-    return user
-
-
-
-
-@router.post("/", response_model=schemas.Usuario)
-def create_user(
-    *,
-    db: Session = Depends(deps.get_db),
-    user_in: schemas.UsuarioCreate,
-    #current_user: models.User = Depends(deps.get_current_active_admin),
-) -> Any:
-    """
-    Create new user.
-    """
-    user = crud.usuario.get_by_email(db, Email=user_in.Email)
-    if user:
-        raise HTTPException(
-            status_code=400,
-            detail="The user with this username already exists in the system.",
-        )
-    user = crud.usuario.create(db, obj_in=user_in)
-    # if settings.EMAILS_ENABLED and user_in.email:
-    #     send_new_account_email(
-    #         email_to=user_in.email, username=user_in.email, password=user_in.password
-    #     )
-    return user
-
-
 @router.get("/me", response_model=schemas.Usuario)
 def read_user_me(
     db: Session = Depends(deps.get_db),
     current_user: models.Usuario = Depends(deps.get_current_active_user),
 ) -> Any:
+
     """
     Get current user.
     """
-    return current_user
+    user = crud.usuario.get_detail_user(db, Numero=current_user.Numero)
+    print(user)
+    return user
+
 
 
 @router.put("/me", response_model=schemas.Usuario)
@@ -121,13 +76,68 @@ def update_user_me(
     return user
 
 
+
+
+
+
+
+
+@router.get("/{user_id}", response_model=schemas.Usuario)
+def read_user_by_id(
+    user_id: int,
+    current_user: models.Usuario = Depends(deps.get_current_active_user),
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    """
+    Get a specific user by id.
+    """
+    user = crud.usuario.get(db, id=user_id)
+    if user == current_user:
+        return user
+    if not crud.usuario.is_admin(current_user):
+        raise HTTPException(
+            status_code=400, detail="The user doesn't have enough privileges"
+        )
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="The user with this username does not exist in the system",
+        )
+    return user
+
+
+
+
+@router.post("/", response_model=schemas.Usuario)
+def create_user(
+    *,
+    db: Session = Depends(deps.get_db),
+    user_in: schemas.UsuarioCreate,
+    current_user: models.User = Depends(deps.get_current_active_admin),
+) -> Any:
+    """
+    Create new user.
+    """
+    user = crud.usuario.get_by_email(db, Email=user_in.Email)
+    if user:
+        raise HTTPException(
+            status_code=400,
+            detail="The user with this username already exists in the system.",
+        )
+    user = crud.usuario.create(db, obj_in=user_in)
+    # if settings.EMAILS_ENABLED and user_in.email:
+    #     send_new_account_email(
+    #         email_to=user_in.email, username=user_in.email, password=user_in.password
+    #     )
+    return user
+
 @router.put("/{user_id}", response_model=schemas.Usuario)
 def update_user(
     *,
     db: Session = Depends(deps.get_db),
     user_id: int,
     user_in: schemas.UsuarioBaseUpdate,
-    #current_user: models.Usuario = Depends(deps.get_current_active_admin),
+    current_user: models.Usuario = Depends(deps.get_current_active_admin),
 ) -> Any:
     """
     Update a user.

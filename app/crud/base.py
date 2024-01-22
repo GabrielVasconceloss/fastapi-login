@@ -8,7 +8,7 @@ from sqlalchemy import delete, insert
 from sqlalchemy.exc import IntegrityError
 
 from app.db.base_class import Base
-#from app.core.logger import logger
+from app.core.logger import logger
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)

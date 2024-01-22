@@ -98,13 +98,13 @@ SET IDENTITY_INSERT Transacoes OFF;
 SET IDENTITY_INSERT Usuarios ON;
 
 INSERT INTO Usuarios (Numero, Iniciais, CodPerfil, Nome, Email, Status, Senha, IdRecuperaSenha, ResetouSenha) 
-VALUES  (1, 'ADMI', 1, 'Administrador', 'adelino.vale@informaker.com.br', 'A', 0x0100DDE24E4211EDA1B7B44C734750DAABC8D0BB741974F94A10, NULL, NULL),
-        (2, 'TSA', 3, 'Tania Santos de Andrade Barbosa', 'tania@saerj.org.br', 'A', 0x010037C87C3E07007B41D5FAFEF55C3E72360E9C6C34F74F4102, NULL, NULL),
-        (3, 'ALM', 2, 'Andrea Laino Marinho', 'deia402010@gmail.com', 'A', 0x01005F2D4B5131E189E8A39FD9C28F10AD2852704E67D3F8266D, NULL, NULL),
-        (4, 'MAA', 2, 'Marcelo Artur Almeida Santos', 'marceloartur.santos@gmail.com', 'A', 0x0100280DC044637265A84592491C5C755964AD0A21EBC2266BB5, NULL, NULL),
-        (5, 'JAC', 5, 'Jorge de Albuquerque Calasans Maia', 'jorgecalasans@gmail.com', 'A', 0x0100828065524C93A6F7281B5F959CD845DEAB79077BE2B85075, NULL, NULL),
-        (6, 'FLV', 6, 'Flavio Lobianco Vicente', 'flalobi@gmail.com', 'A', 0x01003596A238B9CCF1A24109C8E65E34AF19223552C357B64DB4, NULL, NULL),
-        (7, 'PAB', 6, 'Patricia Arguelles Betim Paes Leme', 'patpleme@gmail.com', 'A', 0x01003D041E448984374D90F6E5B88BC39AEBC7C3D057D1581BB9, NULL, NULL);
+VALUES  (1, 'ADMI', 1, 'Administrador', 'adelino.vale@informaker.com.br', 'A', '$2b$12$ozhLOvb83tTWqofwf91yLu3H3hWL8vcgzDuLEp1T4oL4TZf2wofeS', NULL, NULL),
+        (2, 'TSA', 3, 'Tania Santos de Andrade Barbosa', 'tania@saerj.org.br', 'A', '$2b$12$ozhLOvb83tTWqofwf91yLu3H3hWL8vcgzDuLEp1T4oL4TZf2wofeS', NULL, NULL),
+        (3, 'ALM', 2, 'Andrea Laino Marinho', 'deia402010@gmail.com', 'A', '$2b$12$ozhLOvb83tTWqofwf91yLu3H3hWL8vcgzDuLEp1T4oL4TZf2wofeS', NULL, NULL),
+        (4, 'MAA', 2, 'Marcelo Artur Almeida Santos', 'marceloartur.santos@gmail.com', 'A', '$2b$12$ozhLOvb83tTWqofwf91yLu3H3hWL8vcgzDuLEp1T4oL4TZf2wofeS', NULL, NULL),
+        (5, 'JAC', 5, 'Jorge de Albuquerque Calasans Maia', 'jorgecalasans@gmail.com', 'A', '$2b$12$ozhLOvb83tTWqofwf91yLu3H3hWL8vcgzDuLEp1T4oL4TZf2wofeS', NULL, NULL),
+        (6, 'FLV', 6, 'Flavio Lobianco Vicente', 'flalobi@gmail.com', 'A', '$2b$12$ozhLOvb83tTWqofwf91yLu3H3hWL8vcgzDuLEp1T4oL4TZf2wofeS', NULL, NULL),
+        (7, 'PAB', 6, 'Patricia Arguelles Betim Paes Leme', 'patpleme@gmail.com', 'A', '$2b$12$ozhLOvb83tTWqofwf91yLu3H3hWL8vcgzDuLEp1T4oL4TZf2wofeS', NULL, NULL);
         
 SET IDENTITY_INSERT Usuarios OFF;
 

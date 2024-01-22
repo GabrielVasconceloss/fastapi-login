@@ -1,11 +1,12 @@
-from typing import Optional
+from typing import Optional, List
+from .perfil import PerfilBase
+from .acesso import AcessoBase
 from pydantic import BaseModel, EmailStr
 
 
 # Shared properties
 class UsuarioBase(BaseModel):
     Iniciais: Optional[str] = None
-    CodPerfil: Optional[int] = 1
     Nome: Optional[str] = None
     Email: Optional[str] = None
     Status: Optional[str] = None
@@ -34,7 +35,12 @@ class UsuarioInDBBase(UsuarioBase):
 
 # Additional properties to return via API
 class Usuario(UsuarioInDBBase):
-    pass
+    CodPerfil: Optional[int] = None
+    perfil: Optional[PerfilBase] = None
+    acessos: Optional[List[AcessoBase]] = None
+
+    class Config:
+        orm_mode = True
 
 
 # Additional properties stored in DB

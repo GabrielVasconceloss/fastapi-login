@@ -14,6 +14,6 @@ class Perfil(Base):
     PerfilAdministrador = Column(CHAR(1))
     DataAtualizacao = Column(DateTime, default=datetime.now)
     usuarios = relationship("Usuario", back_populates="perfil")
-    acessos = relationship("Acesso", back_populates="perfil")
+    acessos = relationship("Acesso", back_populates="perfil", lazy="joined")
 
 

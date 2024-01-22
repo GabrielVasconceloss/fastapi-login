@@ -21,7 +21,7 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    # PROJECT_NAME: str = "Risk3 Global API"
+    PROJECT_NAME: str = "Login FastAPI"
     #
     # POSTGRES_SERVER: Optional[str]
     # POSTGRES_USER: Optional[str]

@@ -1,16 +1,31 @@
 from typing import Any, Dict, Optional, Union
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.core.security import get_password_hash, verify_password
 from app.crud.base import CRUDBase
 from app.models.usuario import Usuario
+from app.models.perfil import Perfil
 from app.models.permission import Permission
-from app.schemas.usuario import UsuarioCreate, UsuarioUpdate
+from app.schemas.usuario import UsuarioCreate, UsuarioUpdate, UsuarioBaseUpdate
 from app.schemas.permission import PermissionCreate
 
 
-class CRUDUsuario(CRUDBase[Usuario, UsuarioCreate, UsuarioUpdate]):
+class CRUDUsuario(CRUDBase[Usuario, UsuarioCreate, UsuarioBaseUpdate]):
     def get_by_email(self, db: Session, *, Email: str) -> Optional[Usuario]:
         return db.query(Usuario).filter(Usuario.Email == Email).first()
+
+    def get_detail_user(self, db: Session, *, Numero: int) -> Any:
+        current_user_with_profile_and_access = (
+            db.query(Usuario)
+            .filter(Usuario.Numero == Numero)
+            .options(
+                joinedload(Usuario.perfil).joinedload(Perfil.acessos)
+            )
+            .first()
+        )
+        print(db.query(Usuario).filter(Usuario.Numero == Numero).options(
+            joinedload(Usuario.perfil).joinedload(Perfil.acessos)).statement)
+        return current_user_with_profile_and_access
+
 
     def create(self, db: Session, *, obj_in: UsuarioCreate) -> Usuario:
         db_obj = Usuario(
@@ -27,7 +42,7 @@ class CRUDUsuario(CRUDBase[Usuario, UsuarioCreate, UsuarioUpdate]):
         return db_obj
 
     def update(
-        self, db: Session, *, db_obj: Usuario, obj_in: Union[UsuarioUpdate, Dict[str, Any]]
+        self, db: Session, *, db_obj: Usuario, obj_in: Union[UsuarioBaseUpdate, Dict[str, Any]]
     ) -> Usuario:
 
         if isinstance(obj_in, dict):
