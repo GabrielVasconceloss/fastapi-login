@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.core.security import get_password_hash, verify_password
 from app.crud.base import CRUDBase
 from app.models.usuario import Usuario
+from app.models.acesso import Acesso
 from app.models.perfil import Perfil
 from app.models.permission import Permission
 from app.schemas.usuario import UsuarioCreate, UsuarioUpdate, UsuarioBaseUpdate
@@ -13,18 +14,23 @@ class CRUDUsuario(CRUDBase[Usuario, UsuarioCreate, UsuarioBaseUpdate]):
     def get_by_email(self, db: Session, *, Email: str) -> Optional[Usuario]:
         return db.query(Usuario).filter(Usuario.Email == Email).first()
 
+    def get_by_acess(self, db: Session, *, CodPerfil: int, CodTransacao: int) -> Optional[Acesso]:
+        return db.query(Acesso).filter(Acesso.CodPerfil == CodPerfil, Acesso.CodTransacao == CodTransacao).first()
+
     def get_detail_user(self, db: Session, *, Numero: int) -> Any:
-        current_user_with_profile_and_access = (
+        user = (
             db.query(Usuario)
             .filter(Usuario.Numero == Numero)
             .options(
-                joinedload(Usuario.perfil).joinedload(Perfil.acessos)
+                joinedload(Usuario.perfil)
             )
             .first()
         )
-        print(db.query(Usuario).filter(Usuario.Numero == Numero).options(
-            joinedload(Usuario.perfil).joinedload(Perfil.acessos)).statement)
-        return current_user_with_profile_and_access
+        return user
+
+    def get_user_accesses(self, db: Session, *, user: Usuario) -> Any:
+        accesses = db.query(Acesso).filter(Acesso.CodPerfil == user.CodPerfil).all()
+        return accesses
 
 
     def create(self, db: Session, *, obj_in: UsuarioCreate) -> Usuario:

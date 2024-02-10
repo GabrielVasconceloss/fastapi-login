@@ -32,14 +32,38 @@ def read_users(
 def read_user_me(
     db: Session = Depends(deps.get_db),
     current_user: models.Usuario = Depends(deps.get_current_active_user),
-) -> Any:
+) -> schemas.Usuario:
 
     """
     Get current user.
     """
     user = crud.usuario.get_detail_user(db, Numero=current_user.Numero)
-    print(user)
+    accesses = crud.usuario.get_user_accesses(db, user=user)
+    # # Converta as instâncias de Perfil e Acesso para PerfilBase e AcessoBase
+    # #perfil_base = schemas.PerfilBase(**user.perfil.__dict__)
+    # access_bases = [schemas.AcessoBase(**access.__dict__) for access in accesses]
+    #
+    # # Crie um novo objeto Usuario com as informações combinadas
+    # user_with_access = schemas.Usuario(user)
     return user
+
+
+@router.get("/{CodPerfil}", response_model=schemas.AcessoBase)
+def read_users_acess(
+    db: Session = Depends(deps.get_db),
+    CodPerfil: int = 0,
+    CodTransacao: int = 0,
+    #current_user: models.Usuario = Depends(deps.get_current_active_admin),
+) -> Any:
+    """
+    Retrieve users.
+    """
+    users = crud.usuario.get_by_acess(db, CodPerfil=CodPerfil, CodTransacao=CodTransacao)
+    if not users:
+        raise HTTPException(
+            status_code=400, detail="The user doesn't have enough privileges"
+        )
+    return users
 
 
 
